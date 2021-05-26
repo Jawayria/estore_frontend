@@ -32,12 +32,10 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import axios from 'axios';
 import {Redirect} from "react-router-dom";
 import {BASE_URL} from '../base_url.js';
 
 class Login extends React.Component {
-
 
     constructor(props) {
         super(props);
@@ -50,25 +48,30 @@ class Login extends React.Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        await axios.post(
-            BASE_URL+'users/login/',
-            {email: this.state.email, password: this.state.password},
-            {headers: {'Content-Type': 'application/json'}}
-        ).then(res => {
-          window.localStorage.setItem('access_token', res.data['access']);
-          window.localStorage.setItem('refresh_token', res.data['refresh']);
-          window.localStorage.setItem('user_id', res.data['user_id']);
+        try{
+            let response = await fetch(
+                BASE_URL+'users/login/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify({email: this.state.email, password: this.state.password}),
+                    headers: {'Content-Type': 'application/json'}
+                }
+            );
+            let res = await response.json();
+            window.localStorage.setItem('access_token', res['access']);
+            window.localStorage.setItem('refresh_token', res['refresh']);
+            window.localStorage.setItem('user_id', res['user_id']);
 
-        this.setState ( {
-            email: '',
-            password: '',
-            loggedin: true
-        })
-        }).catch( e => {
-            alert(e);
+            this.setState ( {
+                email: '',
+                password: '',
+                loggedin: true
+            })
+        }catch (err){
+            alert(err);
         }
-        );
     };
+
 
   render() {
 
@@ -128,7 +131,6 @@ class Login extends React.Component {
           </CardBody>
         </Card>
         <Row className="mt-3">
-
           <Col className="text-right" xs="12">
             <a
               className="text-light"

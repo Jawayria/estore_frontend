@@ -31,7 +31,6 @@ import {
   InputGroup,
   Col,
 } from "reactstrap";
-import axios from 'axios';
 import {Redirect} from "react-router-dom";
 import {BASE_URL} from '../base_url.js';
 
@@ -47,24 +46,32 @@ class Register extends React.Component {
         console.log(event.target.value);
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = async (event) => {
         event.preventDefault();
-        axios.post(BASE_URL+'users/signup/', {"username": this.state.username, "email": this.state.email, "password": this.state.password, "password2": this.state.password2})
-        .then(res => {
-          window.localStorage.setItem('access_token', res.data['access']);
-          window.localStorage.setItem('refresh_token', res.data['refresh']);
-          window.localStorage.setItem('user_id', res.data['user_id']);
+        try{
+            let response = await fetch(
+                BASE_URL+'users/signup/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify({"username": this.state.username, "email": this.state.email, "password": this.state.password, "password2": this.state.password2}),
+                    headers: {'Content-Type': 'application/json'}
+                }
+            );
+            let res = await response.json();
+            window.localStorage.setItem('access_token', res['access']);
+            window.localStorage.setItem('refresh_token', res['refresh']);
+            window.localStorage.setItem('user_id', res['user_id']);
 
-        this.setState ( {
-            username: '',
-            email: '',
-            password: '',
-            password2: '',
-            loggedin: true
-        });
-        }).catch ( e => {
+            this.setState ( {
+                username: '',
+                email: '',
+                password: '',
+                password2: '',
+                loggedin: true,
+            })
+        }catch (err){
             alert("Invalid Input");
-        });
+        }
     };
 
 

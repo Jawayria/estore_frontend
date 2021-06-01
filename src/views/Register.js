@@ -57,11 +57,13 @@ class Register extends React.Component {
                     headers: {'Content-Type': 'application/json'}
                 }
             );
+            console.log(response)
+            if (!response.ok)
+            {
+                throw new Error("Error")
+            }
             let res = await response.json();
-            window.localStorage.setItem('access_token', res['access']);
-            window.localStorage.setItem('refresh_token', res['refresh']);
-            window.localStorage.setItem('user_id', res['user_id']);
-
+            console.log(res)
             this.setState ( {
                 username: '',
                 email: '',

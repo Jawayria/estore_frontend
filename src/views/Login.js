@@ -39,7 +39,7 @@ class Login extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {email: '', password: '', loggedin: false};
+        this.state = {username: '', password: '', loggedin: false};
     }
 
     handleChange = (event) => {
@@ -53,7 +53,7 @@ class Login extends React.Component {
                 BASE_URL+'users/login/',
                 {
                     method: 'POST',
-                    body: JSON.stringify({email: this.state.email, password: this.state.password}),
+                    body: JSON.stringify({username: this.state.username, password: this.state.password}),
                     headers: {'Content-Type': 'application/json'}
                 }
             );
@@ -63,7 +63,7 @@ class Login extends React.Component {
             window.localStorage.setItem('user_id', res['user_id']);
 
             this.setState ( {
-                email: '',
+                username: '',
                 password: '',
                 loggedin: true
             })
@@ -94,15 +94,15 @@ class Login extends React.Component {
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-email-83" />
+                      <i className="ni ni-hat-3" />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    value={this.state.email}
+                    value={this.state.username}
                     onChange={this.handleChange}
-                    name="email"
-                    placeholder="Email"
-                    type="email"
+                    name="username"
+                    placeholder="Username"
+                    type="text"
                   />
                 </InputGroup>
               </FormGroup>
